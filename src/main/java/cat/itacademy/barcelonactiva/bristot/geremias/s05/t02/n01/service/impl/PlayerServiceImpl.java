@@ -3,9 +3,9 @@ package cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.service.impl;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.converter.PlayerConverter;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.dto.PlayerDTO;
-import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerAlreadyExists;
-import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerListIsEmpty;
-import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerNotFound;
+import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerAlreadyExistsException;
+import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerListIsEmptyException;
+import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerNotFoundException;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.repository.PlayerRepository;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (playerDTO.getName() == null || playerDTO.getName().isBlank() || playerDTO.getName().equalsIgnoreCase("Unnamed")) {
             playerDTO.setName("Unnamed");
         } else if (playerRepository.existsByNameIgnoreCase(playerDTO.getName())) {
-            throw new PlayerAlreadyExists();
+            throw new PlayerAlreadyExistsException();
         }
         return setNewPlayer(playerDTO);
     }
@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
         if (newPlayerDTO.getName() == null || newPlayerDTO.getName().isBlank()) {
             newPlayerDTO.setName("Unnamed");
         } else if (playerRepository.existsByNameIgnoreCase(newPlayerDTO.getName())) {
-            throw new PlayerAlreadyExists();
+            throw new PlayerAlreadyExistsException();
         }
         playerToUpdate.setName(newPlayerDTO.getName());
         playerRepository.save(playerToUpdate);
@@ -57,7 +57,7 @@ public class PlayerServiceImpl implements PlayerService {
 
         List<Player> playerList = playerRepository.findAll();
         if (playerList.isEmpty()) {
-            throw new PlayerListIsEmpty();
+            throw new PlayerListIsEmptyException();
         }
         return playerList.stream().map(PlayerConverter::DomainToDTO)
                 .collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     public Player findPlayerById(int playerId) {
         return playerRepository.findById(playerId)
-                .orElseThrow(PlayerNotFound::new);
+                .orElseThrow(PlayerNotFoundException::new);
     }
 
 }

@@ -3,7 +3,7 @@ package cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.service.impl;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.converter.PlayerConverter;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.dto.PlayerDTO;
-import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerListIsEmpty;
+import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.PlayerListIsEmptyException;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.repository.PlayerRepository;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.service.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RankingServiceImpl implements RankingService {
     public double getAveragePlayer (){
         List<Player> players = playerRepository.findAll();
         if(players.isEmpty()){
-            throw new PlayerListIsEmpty();
+            throw new PlayerListIsEmptyException();
         }
         double totalSuccessRate = players.stream()
                 .mapToDouble(Player::calculateSuccessRate)
@@ -33,7 +33,7 @@ public class RankingServiceImpl implements RankingService {
     public PlayerDTO getWinnerPlayer (){
         List<Player> players = playerRepository.findAll();
         if(players.isEmpty()){
-            throw new PlayerListIsEmpty();
+            throw new PlayerListIsEmptyException();
         }
         Player winner = players.stream().max(Comparator.comparing(Player::calculateSuccessRate))
                 .orElse(null);
@@ -44,7 +44,7 @@ public class RankingServiceImpl implements RankingService {
     public PlayerDTO getLoserPlayer (){
         List<Player> players = playerRepository.findAll();
         if(players.isEmpty()){
-            throw new PlayerListIsEmpty();
+            throw new PlayerListIsEmptyException();
         }
         Player loser = players.stream().min(Comparator.comparing(Player::calculateSuccessRate))
                 .orElse(null);

@@ -4,7 +4,7 @@ import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.converter.GameC
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.domain.Game;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.domain.Player;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.dto.GameDTO;
-import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.GameNotFound;
+import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.exception.GameNotFoundException;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.repository.GameRepository;
 import cat.itacademy.barcelonactiva.bristot.geremias.s05.t02.n01.service.GameService;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +53,7 @@ public class GameServiceImpl implements GameService {
         Player player = playerService.findPlayerById(player_id);
         List<Game> games = gameRepository.findByPlayer_id(player.getId());
         if(games==null || games.isEmpty()){
-            throw new GameNotFound();
+            throw new GameNotFoundException();
         }
         return games.stream().map(GameConverter::DomainToDTO).collect(Collectors.toList());
     }
@@ -62,7 +62,7 @@ public class GameServiceImpl implements GameService {
         Player player = playerService.findPlayerById(player_id);
         List<Game> games = player.getListOfGames();
         if(games==null || games.isEmpty()){
-            throw new GameNotFound();
+            throw new GameNotFoundException();
         }
         games.clear();
         gameRepository.deleteByPlayer_id(player.getId());

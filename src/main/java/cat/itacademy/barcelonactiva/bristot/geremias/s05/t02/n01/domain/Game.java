@@ -57,7 +57,7 @@ public class Game {
     }
 
     public boolean isWin() {
-        return win;
+        return winMethod();
     }
 
     public void setWin(boolean win) {
