@@ -15,7 +15,7 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<PlayerDTO> addPlayer(@RequestBody PlayerDTO playerDTO) {
         PlayerDTO newPlayer = playerService.addPlayer(playerDTO);
         return new ResponseEntity<>(newPlayer, HttpStatus.CREATED);
